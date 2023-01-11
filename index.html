@@ -1,12 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hi!</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HexCGG</title>
+  </head>
+
+  <body style="background-color: #b95cb4; margin: auto; width: 100vw;">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      button {
+        background-color: #892c84;
+        border-style: none;
+        color: white;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+      }
+
+      .difficulty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+      }
+
+      .dif-setting {
+        margin: 10px;
+        font-size: 30px;
+        border-radius: 0.3em;
+      }
+
+      .dif-setting:hover {
+        text-decoration: underline;
+      }
+    </style>
+
+    <div class="main-content">
+      <h1 style="text-align: center;"></h1>
+      <div id="colors" style="margin: auto;"></div>
+      <button onclick="regenerateColors();"><h1>Restart game</h1></button>
+      <div class="difficulty">
+        <button
+          id="dif-3"
+          class="dif-setting"
+          onclick="colorCount = 3; regenerateColors();"
+        >
+          3
+        </button>
+        <button
+          id="dif-5"
+          class="dif-setting"
+          onclick="colorCount = 5; regenerateColors();"
+        >
+          5
+        </button>
+        <button
+          id="dif-7"
+          class="dif-setting"
+          onclick="colorCount = 7; regenerateColors();"
+        >
+          7
+        </button>
+      </div>
+    </div>
+  </body>
+  <script>
+    const colors = []
+
+    let colorCount = 5
+
+    const colorButtons = []
+
+    let mainColor = -1
+
+    regenerateColors()
+
+    function regenerateColors() {
+      colors.length = 0
+
+      for (let i = 0; i < colorCount; i++) {
+        // From: https://stackoverflow.com/a/5092872
+        colors.push(
+          '#000000'.replace(/0/g, function () {
+            return (~~(Math.random() * 16)).toString(16).toUpperCase()
+          }),
+        )
+      }
+
+      mainColor = Math.floor(Math.random() * colors.length)
+
+      const colorsDiv = document.querySelector('#colors')
+
+      colorsDiv.innerHTML = ''
+
+      for (const color in colors) {
+        const button = document.createElement('button')
+        button.id = color.toString()
+
+        button.onclick = (ev) => {
+          if (ev.target.id == mainColor) {
+            alert('You win!')
+            setTimeout(() => {
+              regenerateColors()
+            })
+            return
+          }
+
+          alert('Try again!')
+
+          document.querySelector('h1').innerHTML = `${colors[mainColor]}`
+
+          ev.target.style.opacity = '0%'
+          ev.target.onclick = null
+        }
+        button.style.backgroundColor = `${colors[color]}`
+        button.style.width = '100px'
+        button.style.height = '100px'
+        button.style.margin = '10px'
+        button.style.display = 'inline-block'
+        button.style.borderRadius = '50%'
+        colorsDiv.appendChild(button)
+        colorButtons.push(button)
+      }
+
+      console.log(colors)
+
+      document.querySelector('h1').innerHTML = `${colors[mainColor]}`
+    }
+  </script>
 </html>
